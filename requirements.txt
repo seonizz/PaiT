@@ -1,0 +1,14 @@
+torch
+torchvision
+onnx
+onnxscript
+onnxruntime
+pillow
+numpy
+icrawler
+opencv-python
+scikit-learn
+matplotlib
+streamlit
+streamlit-webrtc
+mediapipe

@@ -1,0 +1,244 @@
+/* PaiT - 블랙/화이트 + 초록 포인트, 미니멀 모바일 앱 UI */
+
+:root {
+    --pait-bg: #ffffff;
+    --pait-fg: #111111;
+    --pait-muted: #6b6b6b;
+    --pait-border: #e6e6e6;
+    --pait-card-bg: #fafafa;
+    --pait-accent: #16a34a;
+    --pait-accent-fg: #ffffff;
+    --pait-warn: #d97706;
+}
+
+.stApp {
+    background-color: var(--pait-bg);
+    color: var(--pait-fg);
+}
+
+h1, h2, h3, h4, p, span, label, div {
+    color: var(--pait-fg);
+}
+
+/* 사이드바 */
+section[data-testid="stSidebar"] {
+    background-color: #0d0d0d;
+}
+section[data-testid="stSidebar"] * {
+    color: #f5f5f5 !important;
+}
+section[data-testid="stSidebar"] .stButton > button {
+    background-color: transparent;
+    color: #f5f5f5;
+    border: none;
+    text-align: left;
+    font-size: 1.05rem;
+    padding: 0.6rem 0.4rem;
+    width: 100%;
+}
+section[data-testid="stSidebar"] .stButton > button:hover {
+    background-color: #262626;
+    color: #ffffff;
+}
+
+/* 버튼 (화면당 Primary 버튼 1개 원칙 - 기본 버튼 스타일이 곧 Primary 스타일) */
+.stButton > button {
+    background-color: var(--pait-accent);
+    color: var(--pait-accent-fg);
+    border-radius: 10px;
+    border: 1px solid var(--pait-accent);
+    padding: 0.6rem 1.2rem;
+    font-weight: 600;
+}
+.stButton > button:hover {
+    background-color: #ffffff;
+    color: var(--pait-accent);
+    border: 1px solid var(--pait-accent);
+}
+.stButton > button:disabled {
+    background-color: #d9d9d9;
+    border-color: #d9d9d9;
+    color: #8a8a8a;
+}
+
+/* 카드 공통 (최소화 - 얇은 테두리만, 그림자 제거) */
+.pait-card {
+    border: 1px solid var(--pait-border);
+    border-radius: 14px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 0.8rem;
+    background-color: var(--pait-card-bg);
+}
+
+.pait-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    margin-bottom: 0.2rem;
+}
+
+.pait-subtle {
+    color: var(--pait-muted);
+    font-size: 0.9rem;
+}
+
+.pait-badge {
+    display: inline-block;
+    background-color: #000000;
+    color: #ffffff;
+    border-radius: 999px;
+    padding: 0.15rem 0.65rem;
+    font-size: 0.78rem;
+    margin-right: 0.35rem;
+}
+
+.pait-badge-outline {
+    display: inline-block;
+    background-color: transparent;
+    color: #000000;
+    border: 1px solid #000000;
+    border-radius: 999px;
+    padding: 0.1rem 0.6rem;
+    font-size: 0.78rem;
+    margin-right: 0.35rem;
+}
+
+/* GOOD / WARNING 상태 배지 (포인트 컬러 원칙: GOOD=초록, WARNING만 예외로 주황 유지) */
+.pait-badge-good {
+    display: inline-block;
+    background-color: var(--pait-accent);
+    color: #ffffff;
+    border-radius: 999px;
+    padding: 0.15rem 0.7rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    margin-right: 0.35rem;
+}
+.pait-badge-warn {
+    display: inline-block;
+    background-color: var(--pait-warn);
+    color: #ffffff;
+    border-radius: 999px;
+    padding: 0.15rem 0.7rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    margin-right: 0.35rem;
+}
+
+/* 목표 선택 카드 (아이콘 제거, 텍스트 중심) */
+.pait-goal-card {
+    border: 2px solid var(--pait-border);
+    border-radius: 18px;
+    padding: 1.4rem 1rem;
+    text-align: center;
+    background-color: var(--pait-card-bg);
+    transition: border-color 0.15s ease;
+}
+.pait-goal-card.selected {
+    border-color: var(--pait-accent);
+    background-color: #f0faf3;
+}
+
+/* 스플래시 */
+.pait-splash-logo {
+    font-size: 3.2rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    text-align: center;
+    margin-top: 2.5rem;
+}
+.pait-splash-tagline {
+    text-align: center;
+    font-size: 1.05rem;
+    color: var(--pait-muted);
+    margin-top: 0.4rem;
+}
+.pait-splash-subtitle {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--pait-muted);
+    margin-bottom: 2rem;
+}
+
+/* 진행률 / 통계 */
+.pait-stat-box {
+    border: 1px solid var(--pait-border);
+    border-radius: 14px;
+    padding: 0.9rem;
+    text-align: center;
+    background-color: var(--pait-card-bg);
+}
+.pait-stat-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+}
+.pait-stat-label {
+    font-size: 0.8rem;
+    color: var(--pait-muted);
+}
+
+.stProgress > div > div > div > div {
+    background-color: var(--pait-accent);
+}
+
+/* 운동 화면: Rep 숫자를 화면에서 가장 크게 */
+.pait-rep-huge {
+    font-size: clamp(4rem, 22vw, 7rem);
+    font-weight: 900;
+    line-height: 1;
+    text-align: center;
+    margin: 0.2rem 0;
+}
+.pait-rep-sub {
+    text-align: center;
+    color: var(--pait-muted);
+    font-size: 1rem;
+    margin-bottom: 0.6rem;
+}
+.pait-set-small {
+    text-align: center;
+    color: var(--pait-muted);
+    font-size: 0.85rem;
+}
+.pait-feedback-line {
+    text-align: center;
+    font-weight: 700;
+    font-size: 1rem;
+    margin: 0.6rem 0;
+}
+.pait-feedback-good { color: var(--pait-accent); }
+.pait-feedback-warn { color: var(--pait-warn); }
+
+/* 상단 루틴 진행률 배너
+   주의: position:sticky를 썼을 때 Streamlit의 블록 레이아웃과 상호작용하며 바로 다음에
+   오는 인라인 콘텐츠(예: workout.py의 모드 토글)를 덮어버리는 문제가 실제로 발생했습니다
+   (routine.py/result.py는 그 아래 콘텐츠가 st.bottom - 별도의 루트 컨테이너 - 이라 증상이
+   안 보였을 뿐, 근본적으로 같은 위험이 있었습니다). sticky 없이 일반 배치로 안전하게 유지합니다. */
+.st-key-routine-header {
+    background-color: var(--pait-bg);
+    padding: 0.5rem 0 0.6rem;
+    border-bottom: 1px solid var(--pait-border);
+    margin-bottom: 0.6rem;
+}
+
+/* 하단 고정 CTA (st.bottom) - 노치 대응 세이프 에어리어 패딩 */
+div[data-testid="stBottomBlockContainer"] {
+    padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+}
+div[data-testid="stBottomBlockContainer"] .stButton > button {
+    width: 100%;
+}
+
+/* 모바일 대응 */
+@media (max-width: 640px) {
+    .block-container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+        padding-top: 1.4rem;
+    }
+    .pait-splash-logo {
+        font-size: 2.4rem;
+    }
+    .pait-title {
+        font-size: 1.05rem;
+    }
+}

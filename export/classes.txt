@@ -1,0 +1,10 @@
+assisted_pullup
+cable_row_crossover
+chest_press
+hip_abduction
+lat_pulldown
+leg_curl_extension
+leg_press
+pec_deck
+shoulder_press
+smith_machine

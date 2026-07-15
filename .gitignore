@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Training data & checkpoints (reproducible via collect_images.py / train.py / export_onnx.py)
+dataset/
+best_model.pt
+
+# Runtime logs
+*.log
+
+# Per-user runtime data (recreated automatically on first workout)
+database/history_log.json
+
+# OS
+.DS_Store
+Thumbs.db

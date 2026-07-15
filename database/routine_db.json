@@ -1,0 +1,71 @@
+{
+  "벌크업": {
+    "상체": {
+      "exercises": [
+        {"key": "chest_press", "sets": 4, "reps": 8},
+        {"key": "shoulder_press", "sets": 4, "reps": 8},
+        {"key": "lat_pulldown", "sets": 4, "reps": 8}
+      ]
+    },
+    "하체": {
+      "exercises": [
+        {"key": "leg_press", "sets": 4, "reps": 8},
+        {"key": "leg_curl_extension", "sets": 4, "reps": 8},
+        {"key": "hip_abduction", "sets": 4, "reps": 8}
+      ]
+    },
+    "전신": {
+      "exercises": [
+        {"key": "smith_machine", "sets": 4, "reps": 8},
+        {"key": "chest_press", "sets": 4, "reps": 8},
+        {"key": "leg_press", "sets": 4, "reps": 8}
+      ]
+    }
+  },
+  "다이어트": {
+    "상체": {
+      "exercises": [
+        {"key": "pec_deck", "sets": 3, "reps": 15},
+        {"key": "cable_row_crossover", "sets": 3, "reps": 15},
+        {"key": "shoulder_press", "sets": 3, "reps": 15}
+      ]
+    },
+    "하체": {
+      "exercises": [
+        {"key": "leg_press", "sets": 3, "reps": 15},
+        {"key": "hip_abduction", "sets": 3, "reps": 15},
+        {"key": "leg_curl_extension", "sets": 3, "reps": 15}
+      ]
+    },
+    "전신": {
+      "exercises": [
+        {"key": "smith_machine", "sets": 3, "reps": 15},
+        {"key": "cable_row_crossover", "sets": 3, "reps": 15},
+        {"key": "leg_curl_extension", "sets": 3, "reps": 15}
+      ]
+    }
+  },
+  "자세교정": {
+    "상체": {
+      "exercises": [
+        {"key": "lat_pulldown", "sets": 3, "reps": 12},
+        {"key": "cable_row_crossover", "sets": 3, "reps": 12},
+        {"key": "assisted_pullup", "sets": 3, "reps": 10}
+      ]
+    },
+    "하체": {
+      "exercises": [
+        {"key": "hip_abduction", "sets": 3, "reps": 12},
+        {"key": "leg_curl_extension", "sets": 3, "reps": 12},
+        {"key": "leg_press", "sets": 3, "reps": 12}
+      ]
+    },
+    "전신": {
+      "exercises": [
+        {"key": "smith_machine", "sets": 3, "reps": 10},
+        {"key": "lat_pulldown", "sets": 3, "reps": 12},
+        {"key": "hip_abduction", "sets": 3, "reps": 12}
+      ]
+    }
+  }
+}
