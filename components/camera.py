@@ -30,7 +30,42 @@ from streamlit_webrtc import RTCConfiguration, VideoProcessorBase, webrtc_stream
 
 from utils.constants import CLASSES_PATH, MODEL_PATH, POSE_MODEL_PATH, POSE_MODEL_URL
 
-RTC_CONFIGURATION = RTCConfiguration({"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]})
+
+def _build_rtc_configuration() -> RTCConfiguration:
+    """WebRTC ICE 서버 설정을 구성합니다.
+
+    STUN 서버만으로는 Streamlit Community Cloud처럼 제한적인 프록시/NAT 환경에서
+    두 피어가 직접(P2P) 연결에 실패하는 경우가 흔히 보고됩니다 - 이럴 때는 TURN
+    릴레이 서버가 필요합니다. TURN은 무료 공개 서버가 마땅치 않아(대부분 계정 가입이
+    필요) 레포에 자격증명을 하드코딩하는 대신 st.secrets에서 읽고, 없으면 STUN만으로
+    동작하도록 안전하게 폴백합니다(로컬 실행이나 P2P가 가능한 네트워크에서는 STUN만
+    으로도 충분합니다).
+
+    st.secrets 설정 예시 (.streamlit/secrets.toml 또는 Community Cloud의 Secrets):
+        [turn]
+        urls = "turn:your-turn-server:3478"
+        username = "..."
+        credential = "..."
+    (Twilio/Metered.ca/Xirsys 등에서 무료 티어로 TURN 자격증명을 발급받을 수 있습니다.)
+    """
+    ice_servers = [{"urls": ["stun:stun.l.google.com:19302"]}]
+    try:
+        turn = st.secrets.get("turn")
+    except Exception:  # noqa: BLE001 - secrets.toml이 아예 없어도 앱이 죽으면 안 됨
+        turn = None
+    if turn:
+        urls = turn["urls"]
+        ice_servers.append(
+            {
+                "urls": [urls] if isinstance(urls, str) else list(urls),
+                "username": turn.get("username"),
+                "credential": turn.get("credential"),
+            }
+        )
+    return RTCConfiguration({"iceServers": ice_servers})
+
+
+RTC_CONFIGURATION = _build_rtc_configuration()
 
 
 # --- 정지 사진 기반 기구 인식 (detect 페이지) -------------------------------------
