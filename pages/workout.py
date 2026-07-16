@@ -155,10 +155,9 @@ def _live_panel_manual(exercise_key: str, exercise_data: dict, total_reps: int, 
     # 한 박자 밀림이 생깁니다).
     set_count = st.session_state.set_count
     is_last_set = set_count >= total_sets
-    button_label = "운동 종료" if is_last_set else "세트 완료"
 
     with st.bottom:
-        if st.button(button_label, width="stretch", key="workout_set_complete_manual"):
+        if st.button("세트 완료", width="stretch", key="workout_set_complete_manual"):
             if is_last_set:
                 completed_reps = total_sets * total_reps  # Rep 단위는 기록하지 않으므로 목표치로 계산
                 _finish_workout(exercise_key, exercise_data, set_count, completed_reps)
@@ -167,6 +166,7 @@ def _live_panel_manual(exercise_key: str, exercise_data: dict, total_reps: int, 
 
     # 버튼 처리 이후 최신 값으로 다시 읽어서 표시합니다.
     set_count = st.session_state.set_count
+    st.markdown(f'<div class="pait-title" style="text-align:center;">{exercise_data["name"]}</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="pait-rep-huge">Set {set_count}/{total_sets}</div>', unsafe_allow_html=True)
     st.progress(min(set_count / total_sets, 1.0) if total_sets else 0.0)
 
