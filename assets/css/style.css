@@ -7,7 +7,6 @@
     --pait-border: #e6e6e6;
     --pait-card-bg: #fafafa;
     --pait-accent: #16a34a;
-    --pait-accent-fg: #ffffff;
     --pait-warn: #d97706;
 }
 
@@ -43,17 +42,17 @@ section[data-testid="stSidebar"] .stButton > button:hover {
 
 /* 버튼 (화면당 Primary 버튼 1개 원칙 - 기본 버튼 스타일이 곧 Primary 스타일) */
 .stButton > button {
-    background-color: var(--pait-accent);
-    color: var(--pait-accent-fg);
+    background-color: #ffffff;
+    color: #000000;
     border-radius: 10px;
-    border: 1px solid var(--pait-accent);
+    border: 1px solid #000000;
     padding: 0.6rem 1.2rem;
     font-weight: 600;
 }
 .stButton > button:hover {
-    background-color: #ffffff;
-    color: var(--pait-accent);
-    border: 1px solid var(--pait-accent);
+    background-color: #000000;
+    color: #ffffff;
+    border: 1px solid #000000;
 }
 .stButton > button:disabled {
     background-color: #d9d9d9;
@@ -145,12 +144,6 @@ section[data-testid="stSidebar"] .stButton > button:hover {
     letter-spacing: -0.02em;
     text-align: center;
     margin-top: 2.5rem;
-}
-.pait-splash-tagline {
-    text-align: center;
-    font-size: 1.05rem;
-    color: var(--pait-muted);
-    margin-top: 0.4rem;
 }
 .pait-splash-subtitle {
     text-align: center;

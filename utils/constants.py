@@ -19,7 +19,6 @@ POSE_MODEL_URL = (
 )
 
 APP_NAME = "PaiT"
-APP_TAGLINE = "Train Smarter, Anywhere."
 APP_SUBTITLE = "Edge AI Personal Trainer"
 
 GOALS = [

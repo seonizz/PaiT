@@ -1,14 +1,12 @@
-torch
-torchvision
-onnx
-onnxscript
-onnxruntime
-pillow
-numpy
-icrawler
-opencv-python
-scikit-learn
-matplotlib
-streamlit
-streamlit-webrtc
-mediapipe
+# PaiT 앱 실행(streamlit run app.py)에 필요한 런타임 의존성만 포함합니다.
+# torch/torchvision/onnx/onnxscript/scikit-learn/matplotlib/icrawler 등 학습·데이터수집
+# 전용 패키지는 requirements-train.txt로 분리했습니다 (Streamlit Community Cloud 등
+# 배포 환경의 빌드 용량/시간을 줄이기 위함).
+streamlit==1.59.1
+streamlit-webrtc==0.75.0
+av==16.1.0
+mediapipe==0.10.35
+opencv-python-headless==5.0.0.93
+numpy==2.2.6
+pillow==11.2.1
+onnxruntime==1.27.0

@@ -1,0 +1,10 @@
+# 기구 인식 모델 재학습/재수출/데이터 수집용 (train.py, export_onnx.py, split_dataset.py,
+# augment_dataset.py, collect_images.py, plot_confusion_matrix.py, evaluate_onnx.py).
+# 앱 배포(requirements.txt)에는 필요 없습니다: pip install -r requirements.txt -r requirements-train.txt
+torch
+torchvision
+onnx
+onnxscript
+scikit-learn
+matplotlib
+icrawler

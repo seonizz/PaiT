@@ -35,6 +35,16 @@ RTC_CONFIGURATION = RTCConfiguration({"iceServers": [{"urls": ["stun:stun.l.goog
 
 # --- 정지 사진 기반 기구 인식 (detect 페이지) -------------------------------------
 
+# export_onnx.py(학습 파이프라인)의 VAL_TRANSFORM과 반드시 동일한 전처리여야 합니다.
+# torch/torchvision을 배포 환경(Streamlit Community Cloud 등)에 설치하지 않기 위해
+# PIL/NumPy만으로 동일한 연산(Resize 짧은 변 255 -> CenterCrop 224 -> [0,1] 정규화 ->
+# ImageNet mean/std 정규화)을 재현합니다. 실제 이미지로 torchvision 결과와 diff=0 확인함.
+ONNX_INPUT_NAME = "input"
+ONNX_IMAGE_SIZE = 224
+ONNX_RESIZE_SIZE = int(ONNX_IMAGE_SIZE * 1.14)
+_IMAGENET_MEAN = np.array([0.485, 0.456, 0.406], dtype=np.float32)
+_IMAGENET_STD = np.array([0.229, 0.224, 0.225], dtype=np.float32)
+
 
 def render_camera_input(key: str = "detect_camera_input"):
     """기구 인식(detect 페이지)용 정지 사진 촬영."""
@@ -51,18 +61,35 @@ def _load_onnx_session():
     return ort.InferenceSession(str(MODEL_PATH), providers=["CPUExecutionProvider"])
 
 
+def _preprocess_for_onnx(image: Image.Image) -> np.ndarray:
+    image = image.convert("RGB")
+    w, h = image.size
+    if w < h:
+        new_w, new_h = ONNX_RESIZE_SIZE, int(ONNX_RESIZE_SIZE * h / w)
+    else:
+        new_h, new_w = ONNX_RESIZE_SIZE, int(ONNX_RESIZE_SIZE * w / h)
+    image = image.resize((new_w, new_h), Image.BILINEAR)
+
+    left = int(round((new_w - ONNX_IMAGE_SIZE) / 2.0))
+    top = int(round((new_h - ONNX_IMAGE_SIZE) / 2.0))
+    image = image.crop((left, top, left + ONNX_IMAGE_SIZE, top + ONNX_IMAGE_SIZE))
+
+    arr = np.asarray(image, dtype=np.float32) / 255.0  # HWC, [0, 1]
+    arr = (arr - _IMAGENET_MEAN) / _IMAGENET_STD
+    arr = arr.transpose(2, 0, 1)  # CHW
+    return arr[np.newaxis, ...].astype(np.float32)  # NCHW
+
+
 def run_onnx_detection(image: Image.Image) -> dict:
     """detect 페이지에서 더미 데이터 대신 이 함수를 사용하도록 연결하면 실제 인식으로 전환됩니다."""
     if not MODEL_PATH.exists() or not CLASSES_PATH.exists():
         raise FileNotFoundError("export_onnx.py를 먼저 실행해 모델을 생성하세요.")
 
-    from export_onnx import INPUT_NAME, VAL_TRANSFORM
-
     class_keys = CLASSES_PATH.read_text(encoding="utf-8").splitlines()
     session = _load_onnx_session()
 
-    tensor = VAL_TRANSFORM(image.convert("RGB")).unsqueeze(0).numpy().astype(np.float32)
-    outputs = session.run(None, {INPUT_NAME: tensor})
+    tensor = _preprocess_for_onnx(image)
+    outputs = session.run(None, {ONNX_INPUT_NAME: tensor})
     logits = outputs[0][0]
     probs = np.exp(logits - logits.max())
     probs /= probs.sum()
