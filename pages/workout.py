@@ -3,8 +3,9 @@
 두 가지 모드를 제공합니다.
 - AI 자세 분석: MediaPipe Pose(components.camera.PoseWorkoutProcessor)가 웹캠으로
   Rep을 자동 카운트하고 자세 피드백을 계산합니다.
-- 수동 카운팅: 카메라 권한 없이 [+1 Rep] 버튼으로 직접 Rep을 기록합니다(예: 카메라를
-  쓸 수 없는 환경, 프라이버시 등의 이유).
+- 수동 카운팅: 카메라 권한 없이 [세트 완료] 버튼 하나로 세트 단위를 직접 기록합니다
+  (예: 카메라를 쓸 수 없는 환경, 프라이버시 등의 이유). Rep 단위 카운팅은 하지 않고
+  현재 세트만 크게 표시합니다.
 
 두 모드 모두 Rep/Set/운동시간 표시와 세트·종료 버튼 흐름은 동일하게 동작하며, 이
 부분을 st.fragment(run_every=1)로 감싸 1초마다 자동 갱신합니다. AI 모드에서는
@@ -83,9 +84,7 @@ def _render_rep_display(rep: int, total_reps: int, set_count: int, total_sets: i
     st.markdown(f'<div class="pait-set-small">Set {set_count} / {total_sets}</div>', unsafe_allow_html=True)
 
 
-def _finish_workout(exercise_key: str, exercise_data: dict, set_count: int, rep: int, total_reps: int):
-    completed_reps = (set_count - 1) * total_reps + rep  # 라이브 rep 사용 (스테일 방지)
-
+def _finish_workout(exercise_key: str, exercise_data: dict, set_count: int, completed_reps: int):
     # 칼로리 = 운동시간(분) x MET x 체중(kg) / 60
     duration_min = st.session_state.elapsed_sec / 60
     met = exercise_data.get("met", 3.5)
@@ -143,37 +142,33 @@ def _live_panel_ai(ctx, exercise_key: str, exercise_data: dict, total_reps: int,
                     ctx.video_processor.reset()
         else:
             if st.button("운동 종료", width="stretch", key="workout_finish_ai"):
-                _finish_workout(exercise_key, exercise_data, set_count, rep, total_reps)
+                completed_reps = (set_count - 1) * total_reps + rep  # 라이브 rep 사용 (스테일 방지)
+                _finish_workout(exercise_key, exercise_data, set_count, completed_reps)
 
 
 @st.fragment(run_every=1)
 def _live_panel_manual(exercise_key: str, exercise_data: dict, total_reps: int, total_sets: int):
     st.session_state.elapsed_sec = int(time.time() - st.session_state.workout_start_time)
 
-    # 버튼 처리를 먼저 수행해서, 클릭 직후 렌더링에 최신 rep/set 값이 바로 반영되도록 합니다
+    # 버튼 처리를 먼저 수행해서, 클릭 직후 렌더링에 최신 set 값이 바로 반영되도록 합니다
     # (렌더링을 먼저 하면 이번 클릭의 효과가 다음 1초 후 자동 갱신 때까지 화면에 안 보이는
     # 한 박자 밀림이 생깁니다).
-    rep = st.session_state.rep_count
     set_count = st.session_state.set_count
-    set_complete = total_reps > 0 and rep >= total_reps
+    is_last_set = set_count >= total_sets
+    button_label = "운동 종료" if is_last_set else "세트 완료"
 
     with st.bottom:
-        if not set_complete:
-            if st.button("+1 Rep", width="stretch", key="workout_plus_one"):
-                # 버튼 라벨이 다음 세트로 바뀌기 전(최대 1초) 연타해도 목표 rep을 넘지 않도록 clamp
-                st.session_state.rep_count = min(st.session_state.rep_count + 1, total_reps)
-        elif set_count < total_sets:
-            if st.button("다음 세트", width="stretch", key="workout_next_set_manual"):
+        if st.button(button_label, width="stretch", key="workout_set_complete_manual"):
+            if is_last_set:
+                completed_reps = total_sets * total_reps  # Rep 단위는 기록하지 않으므로 목표치로 계산
+                _finish_workout(exercise_key, exercise_data, set_count, completed_reps)
+            else:
                 st.session_state.set_count += 1
-                st.session_state.rep_count = 0
-        else:
-            if st.button("운동 종료", width="stretch", key="workout_finish_manual"):
-                _finish_workout(exercise_key, exercise_data, set_count, rep, total_reps)
 
     # 버튼 처리 이후 최신 값으로 다시 읽어서 표시합니다.
-    rep = st.session_state.rep_count
     set_count = st.session_state.set_count
-    _render_rep_display(rep, total_reps, set_count, total_sets)
+    st.markdown(f'<div class="pait-rep-huge">Set {set_count}/{total_sets}</div>', unsafe_allow_html=True)
+    st.progress(min(set_count / total_sets, 1.0) if total_sets else 0.0)
 
     warnings = exercise_data.get("warnings") or []
     if warnings:
